@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <br>
+        <h3>Update</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <textarea name='comment' class="form-control" placeholder="Write a comment..." rows="3">{{ comment.text }}</textarea>
+            <br>
+            <div style="display: none">
+                <textarea name='form_url' class="form-control">{{ form_url}}</textarea>
+            </div>
+            <div class="row">
+                <div class="col-auto mr-auto"></div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-info">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

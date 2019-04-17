@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <br>
+        <br>
+        <div class="row">
+            <h3>{{ actor.first_name }} {{ actor.last_name }}</h3>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-lg-6">
+                <p>Birthdate: {{ actor.birthdate }}</p>
+                <p>Sex: {{ actor.sex }}</p>
+                <p>Alive: {{ actor.is_alive }}</p>
+                {% if not movies %}
+                    <p>Movie: Nothing</p>
+                {% else %}
+                    <p>Movie: {{movies}}</p>
+                {% endif%}
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="comment-wrapper">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3>Comment</h3>
+                </div>
+                <br>
+                <div class="panel-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <textarea name='comment' class="form-control" placeholder="Write a comment..." rows="3"></textarea>
+                        <br>
+                        <div class="row">
+                            <div class="col-auto mr-auto"></div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-info">Post</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <ul class="media-list">
+                        {% for comment in comments %}
+                        <li class="media">
+                            <div class="media-body">
+                                <div class="row">
+                                    <div class="col-auto mr-auto">
+                                        <strong class="text-success">{{ comment.author }}</strong>
+                                        <span class="text-muted pull-right">
+                                            <small class="text-muted"></small>
+                                        </span>
+                                    </div>
+                                    {% if user.username == comment.author %}
+                                    <div class="col-auto">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                ...
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <form method="POST" action="{% url 'movies:update_comment' comment.id %}">
+                                                    {% csrf_token %}
+                                                    <div style="display: none">
+                                                        <textarea name='form_url' class="form-control">{% url 'movies:view_actor' actor.id %}</textarea>
+                                                    </div>
+                                                    <button class="dropdown-item" >Edit</button>
+                                                </form>
+                                                <form method="POST" action="{% url 'movies:delete_comment' comment.id %}">
+                                                    {% csrf_token %}
+                                                    <div style="display: none">
+                                                        <textarea name='form_url' class="form-control">{% url 'movies:view_actor' actor.id %}</textarea>
+                                                    </div>
+                                                    <button class="dropdown-item btn-danger">Delete</button>
+                                                </form>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <p>
+                                    {{ comment.text }}
+                                </p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

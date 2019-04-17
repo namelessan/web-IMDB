@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-lg-6">
+                {% if movie.logo %}
+                <img class="img-fluid rounded" src="{{ movie.logo.url }}" alt="">
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <h3>{{ movie.title }}</h3>
+                <p> Release date: {{ movie.release_date }}</p>
+                <p> Category: {{ movie.category }}</p>
+                {% if actors %}
+                    <p>Actors: {{actors}}</p>
+                {% endif%}
+                <hr>
+                <p> {{ movie.description }}</p>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="comment-wrapper">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3>Comment</h3>
+                </div>
+                <div class="panel-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <textarea name='comment' class="form-control" placeholder="Write a comment..." rows="3"></textarea>
+                        <br>
+                        <div class="row">
+                            <div class="col-auto mr-auto"></div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-info">Post</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <ul class="media-list">
+                        {% for comment in comments %}
+                        <li class="media">
+                            <div class="media-body">
+                                <div class="row">
+                                    <div class="col-auto mr-auto">
+                                        <strong class="text-success">{{ comment.author }}</strong>
+                                        <span class="text-muted pull-right">
+                                            <small class="text-muted"></small>
+                                        </span>
+                                    </div>
+                                    {% if user.username == comment.author %}
+                                    <div class="col-auto">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                ...
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <form method="POST" action="{% url 'movies:update_comment' comment.id %}">
+                                                    {% csrf_token %}
+                                                    <div style="display: none">
+                                                        <textarea name='form_url' class="form-control">{% url 'movies:view_movie' movie.id %}</textarea>
+                                                    </div>
+                                                    <button class="dropdown-item" >Edit</button>
+                                                </form>
+                                                <form method="POST" action="{% url 'movies:delete_comment' comment.id %}">
+                                                    {% csrf_token %}
+                                                    <div style="display: none">
+                                                        <textarea name='form_url' class="form-control">{% url 'movies:view_movie' movie.id %}</textarea>
+                                                    </div>
+                                                    <button class="dropdown-item btn-danger">Delete</button>
+                                                </form>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <p>
+                                    {{ comment.text }}
+                                </p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extrastyle %}
+<style>
+    .conditional_form_part {
+        display: none;
+    }
+    
+    .conditional_form_part_activator:checked+.conditional_form_part {
+        display: block;
+    }
+    
+</style>
+{% endblock%}

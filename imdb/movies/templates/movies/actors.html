@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <br>
+    <h2>Actor</h2>
+    <hr>
+    <div class="row">
+        <div class="col-auto mr-auto"></div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">New Actor</button>
+        </div>
+    </div>
+    <br>
+    {% for actor in actors_user %}
+        <div class="row">
+            <div class="col-auto mr-auto">
+                <h3>{{ actor.first_name }} {{ actor.last_name }}</h3>
+                <p>Birthdate: {{ actor.birthdate }}</p>
+                <p>Nationality: {{ actor.nationality }}</p>
+            </div>
+            <div class="col-auto">
+                <div class="btn-group">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        ...
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'movies:view_actor' actor.id %}">Show</a>
+                        <a class="dropdown-item" href="{% url 'movies:update_actor' actor.id %}">Update</a>
+                        <a class="dropdown-item btn-danger" href="{% url 'movies:delete_actor' actor.id %}">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Actor</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

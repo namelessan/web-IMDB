@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <br>
+        <h2>Confirm</h2>
+        <hr>
+        <h4>Do you want to delete {{movie}} ?</h4>
+        <br>
+        <div class="row">
+            <form method="POST" style="padding-left: 20px">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            <br>
+            <div class="col-lg-3" style="padding-left: 20px">
+                <a href="{% url 'movies:home' %}" class="btn btn-primary">Return to home</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
